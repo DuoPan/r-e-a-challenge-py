@@ -40,6 +40,11 @@ class Robot:
 	def report(self):
 		print (self.x, self.y, self.face, sep = ',')
 
+	def place(self, x, y, face):
+		self.x = int(x)
+		self.y = int(y)
+		self.face = face
+
 # test
 # t = TableTop(5,5)
 # r = Robot(0,2,'NORTH', t)

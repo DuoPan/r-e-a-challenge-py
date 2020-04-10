@@ -7,13 +7,12 @@ import os
 gameStatus = {
 	'INIT': 1,
 	'RUNNING': 2,
-	'GAMEOVER': 3
 }
 currentStatus = gameStatus['INIT']
 tableTop = TableTop(5,5)
 robot = None
 
-# main function
+# core function
 def run(command):
 	global currentStatus
 	
@@ -22,6 +21,7 @@ def run(command):
 	if (currentStatus == gameStatus['RUNNING']):
 		action(command)
 
+# initial place
 def start(command):
 	global currentStatus
 	global robot
@@ -29,23 +29,33 @@ def start(command):
 	if (command[0:5] != 'PLACE'):
 		return
 	location = command.split(' ')[1].split(',')
-	robot = Robot(location[0], location[1], location[2], tableTop)
-	currentStatus = gameStatus['RUNNING']
-	
+	if (isValidLocation(int(location[0]), int(location[1]))):
+		robot = Robot(location[0], location[1], location[2], tableTop)
+		currentStatus = gameStatus['RUNNING']
+
+# all actions after initial place
 def action(command):
 	global currentStatus
 	global robot
-	
-	if (command == 'MOVE'):
-		robot.move()
-	if (command == 'LEFT'):
-		robot.left()
-	if (command == 'RIGHT'):
-		robot.right()
-	if (command == 'REPORT'):
-		robot.report()
-		currentStatus = gameStatus['GAMEOVER']
 
+	if (command[0:5] == 'PLACE'):
+		location = command.split(' ')[1].split(',')
+		if (isValidLocation(int(location[0]), int(location[1]))):
+			robot.place(location[0], location[1], location[2])
+	elif (command == 'MOVE'):
+		robot.move()
+	elif (command == 'LEFT'):
+		robot.left()
+	elif (command == 'RIGHT'):
+		robot.right()
+	elif (command == 'REPORT'):
+		robot.report()
+
+# check if it is a valid place location
+def isValidLocation(x, y):
+	return (x in range(5) and y in range(5))
+
+# main function
 def main(f):
 	while True: 
 		# Get next line from file 
